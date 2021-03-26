@@ -10,11 +10,9 @@ class grid_world:
         self.width = WIDTH
         self.height = HEIGHT
 
-
     def is_terminal(self, state):   # Gaol state
         x, y = state
         return (x == 0 and y == 0) or (x == self.width - 1 and y == self.height - 1)
-
 
     def interaction(self, state, action):
         if self.is_terminal(state):
@@ -29,9 +27,9 @@ class grid_world:
         reward = -1
         return next_state, reward
 
-
     def size(self):
         return self.width, self.height
+
 
 def draw_image(iteration, image):
     fig, ax = plt.subplots()
@@ -57,9 +55,11 @@ def draw_image(iteration, image):
 
     plt.show()
 
+
 WORLD_SIZE = 4
 # left, up, right, down
-ACTIONS = {'LEFT':np.array([0, -1]), 'UP':np.array([-1, 0]), 'RIGHT':np.array([0, 1]), 'DOWM':np.array([1, 0])}
+ACTIONS = {'LEFT': np.array([0, -1]), 'UP': np.array([-1, 0]),
+           'RIGHT': np.array([0, 1]), 'DOWM': np.array([1, 0])}
 ACTION_PROB = 0.25
 
 
@@ -72,26 +72,49 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
         for j in range(HEIGHT):
             expected_reward = 0
             for action in ACTIONS:
-                (next_i, next_j), reward = env.interaction([i, j], ACTIONS[action])
+                (next_i, next_j), reward = env.interaction(
+                    [i, j], ACTIONS[action])
                 expected_reward += ACTION_PROB*reward
             R[i, j] = expected_reward
-    R = R.reshape((-1,1))
-    R = R[1:-1,:]
-
+    R = R.reshape((-1, 1))
+    R = R[1:-1, :]
 
     # Transition matrix T
-    #
-    #
-    #
-    # Write your code here
-    #
-    #
-    #
+    T = np.zeros([WIDTH,  HEIGHT, WIDTH, HEIGHT])
+    for i in range(WIDTH):
+        for j in range(HEIGHT):
+            for action in ACTIONS:
+                (next_i, next_j), reward = env.interaction(
+                    [i, j], ACTIONS[action])
+                T[i, j, next_i, next_j] += ACTION_PROB
 
-    new_state_values = V.reshape(WIDTH,HEIGHT)
-    draw_image(1, np.round(new_state_values, decimals=2))
+    T = T.flatten()
+    T = T.reshape([WIDTH*HEIGHT,WIDTH*HEIGHT])
+    T = T[1:-1, 1:-1]
+
+    iteration = 1000
+
+       
+    # Identity matrix for I
+    I = np.identity(WIDTH*HEIGHT-2)
+
+    # Initial V matrix = 0s
+    V = np.zeros([14,1])
+    
+    # V = R + discount*T*V
+    for i in range(iteration):
+        V = R + np.matmul(T, V)
+    
+    V = V.flatten()
+    V = np.concatenate(([0], V, [0]))
+
+
+
+    new_state_values = V.reshape(WIDTH, HEIGHT)
+    draw_image(iteration, np.round(new_state_values, decimals=2))
 
     return new_state_values
 
+
 env = grid_world()
-values = evaluate_state_value_by_matrix_inversion(env = env)
+values = evaluate_state_value_by_matrix_inversion(env=env)

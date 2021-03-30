@@ -81,43 +81,76 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
 
     # Transition matrix T
 
+    # T has an initial size of 4x4x4x4
     T = np.zeros([WIDTH,  HEIGHT, WIDTH, HEIGHT])
+
+    # This interaction code lines are identical to the ones
+    # used in the reward interactions.
+    # After this loop, T array would contain the information
+    # of the probability of each cell's movement.
+
+    # Horizontal movement
     for i in range(WIDTH):
+        # Vertical movement
         for j in range(HEIGHT):
+            # Control interaction
             for action in ACTIONS:
+
+                # next_i and next_i components are the key part
+                # of the control interaction. This line computes
+                # P(s'|s,a) of each cells.
                 (next_i, next_j), reward = env.interaction(
                     [i, j], ACTIONS[action])
+
+                # '+=' operator is used to consider the case
+                # when the cell tried to move but it couldn't
+                # because of the wall. In this case, S' would
+                # be same as S.
                 T[i, j, next_i, next_j] += ACTION_PROB
 
-    # Flattens T matrix into [-1,1] shape.
+
+
+    # Flattens T matrix into [-1,] shape.
+    # As a result, T becomes 256x1 array.
     T = T.flatten()
-    
+
     # Reshape flattened matrix into [16,16]
-    # Row has the information of [v(0), v(1), v(2), ..., v(15)]
+    # Now, the information of the probability is expressed as T[s',s].
     T = T.reshape([WIDTH*HEIGHT,WIDTH*HEIGHT])
 
-
+    # Since T has contained the information of terminal state 1 and 16,
+    # those information are truncated in this line.
     T = T[1:-1, 1:-1]
 
-    iteration = 1000
-
-       
+    
+    # iteration variable for debugging
+    iteration = 1000     
 
 
     # Initial V matrix = 0s
     V = np.zeros([14,1])
     
-    # V = R + discount*T*V
+    # Two expressions for finding V
+
+    # 1. V = R + discount*T*V
+    # With the sufficient iterations, 
+    # the result becomes identical to the 2. case.
     for i in range(iteration):
         V = R + np.matmul(T, V)
     
-    # ... or V = inv(I-T)*R
+    # 2. V = inv(I-T)*R
     # Identity matrix for I
     I = np.identity(WIDTH*HEIGHT-2)
-    # V = np.matmul(np.linalg.inv(I-T), R)
+    # V = inv(I-T)*R
+    V = np.matmul(np.linalg.inv(I-T), R)
 
+    # Now, V has a shape of [14,1]
     
+    # This line flattens the array into [-1,] shape for concatenation.
     V = V.flatten()
+
+    # Inserts terminal state. 
+    # Then, V contains full information of the grid world.
     V = np.concatenate(([0], V, [0]))
 
 

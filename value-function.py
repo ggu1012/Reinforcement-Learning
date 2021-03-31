@@ -134,7 +134,7 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
 
     # 1. V = R + discount*T*V
     # With the sufficient iterations, 
-    # the result becomes identical to the 2. case.
+    # the result becomes identical to the second case.
     for i in range(iteration):
         V = R + np.matmul(T, V)
     

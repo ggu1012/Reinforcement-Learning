@@ -33,7 +33,7 @@ class grid_world:
 
 def draw_image(iteration, image):
     fig, ax = plt.subplots()
-    plt.suptitle('Iteration:{:d}'.format(iteration))
+    plt.suptitle('Iteration : {:d}'.format(iteration))
     ax.set_axis_off()
     tb = Table(ax, bbox=[0, 0, 1, 1])
 
@@ -84,7 +84,7 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
     # T has an initial size of 4x4x4x4
     T = np.zeros([WIDTH,  HEIGHT, WIDTH, HEIGHT])
 
-    # This interaction code lines are identical to the ones
+    # These interaction code lines are identical to the ones
     # used in the reward interactions.
     # After this loop, T array would contain the information
     # of the probability of each cell's movement.
@@ -98,7 +98,7 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
 
                 # next_i and next_i components are the key part
                 # of the control interaction. This line computes
-                # P(s'|s,a) of each cells.
+                # P(s'|s,a) of each cell.
                 (next_i, next_j), reward = env.interaction(
                     [i, j], ACTIONS[action])
 
@@ -115,7 +115,7 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
     T = T.flatten()
 
     # Reshape flattened matrix into [16,16]
-    # Now, the information of the probability is expressed as T[s',s].
+    # Now, the information of the probability is expressed as T[s,s'].
     T = T.reshape([WIDTH*HEIGHT,WIDTH*HEIGHT])
 
     # Since T has contained the information of terminal state 1 and 16,
@@ -124,7 +124,7 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
 
     
     # iteration variable for debugging
-    iteration = 1000     
+    iteration = 22 
 
 
     # Initial V matrix = 0s
@@ -135,9 +135,9 @@ def evaluate_state_value_by_matrix_inversion(env, discount=1.0):
     # 1. V = R + discount*T*V
     # With the sufficient iterations, 
     # the result becomes identical to the second case.
-    for i in range(iteration):
-        V = R + np.matmul(T, V)
-    
+    # for i in range(iteration):
+    #     V = R + np.matmul(T, V)
+
     # 2. V = inv(I-T)*R
     # Identity matrix for I
     I = np.identity(WIDTH*HEIGHT-2)

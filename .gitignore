@@ -1,3 +1,7 @@
 *.pdf
 *.docx
+<<<<<<< HEAD
 HW3/__pycache__/
+=======
+HW3/__pycache__/*
+>>>>>>> b4c3f97d3c6c18edac65264b9c1957b4c8beb465

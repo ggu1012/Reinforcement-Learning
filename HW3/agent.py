@@ -58,8 +58,20 @@ class AGENT:
             # Sequence generation
             history.append((state, action, next_state, reward))
 
+
+
+
+
+
+
             # Q Value and policy update
             self.Q_values[i][j][a] += alpha * (cum_reward - self.Q_values[i][j][a])
+
+
+
+
+
+            
 
 
         self.V_values = np.max(self.Q_values, axis=2)

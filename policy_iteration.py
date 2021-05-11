@@ -123,8 +123,7 @@ class AGENT:
                 for k in range(len(ACTIONS)):
                     # Environment interaction.
                     # Computes the next state and the reward following the action.
-                    (next_i, next_j), reward = env.interaction(
-                        [i, j], ACTIONS[k])
+                    (next_i, next_j), reward = env.interaction([i, j], ACTIONS[k])
 
                     # policy[i,j,k] : probability of ACTIONS[k] for state [i,j]
                     # Trainstion matrix T would contain the information of the probability
@@ -198,24 +197,20 @@ class AGENT:
         for i in range(HEIGHT):
             for j in range(WIDTH):
                 return_value = np.zeros([len(ACTIONS)])
-                new_policy_state = np.array(
-                    np.zeros([1, 4]), dtype=float).flatten()
+                new_policy_state = np.array(np.zeros([1, 4]), dtype=float).flatten()
 
                 # For every action,
                 for k in range(len(ACTIONS)):
                     action = ACTIONS[k]
                     # Computes the next state and the reward following the action.
-                    [next_i, next_j], instant_reward = env.interaction(
-                        [i, j], action)
+                    [next_i, next_j], instant_reward = env.interaction([i, j], action)
 
                     # Compute the instant reward and add the result with the state value.             
-                    return_value[k] = instant_reward + \
-                        state_values[next_i, next_j]
+                    return_value[k] = instant_reward + state_values[next_i, next_j]
 
                 # Choose the largest result. If there is more than one, take that as well.
                 # Append the indices of the chosens to the list.
-                max_return_idx = np.argwhere(
-                    return_value == np.max(return_value))
+                max_return_idx = np.argwhere(return_value == np.max(return_value))
 
                 # Convert np.array to list
                 max_return_idx = max_return_idx.flatten().tolist()

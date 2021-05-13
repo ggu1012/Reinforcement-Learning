@@ -43,7 +43,7 @@ def draw_policy_image(iteration, policy_image, env):
     ax.set_axis_off()
     tb = Table(ax, bbox=[0, 0, 1, 1])
 
-    nrows, ncols, nactinos = policy_image.shape
+    nrows, ncols, nactions = policy_image.shape
     width, height = 1.0 / ncols, 1.0 / nrows
 
     # Add cells
@@ -56,7 +56,7 @@ def draw_policy_image(iteration, policy_image, env):
                 tb.add_cell(i, j, height, width, text='╳',
                         loc='center', facecolor='white')
             else:
-                actions = (np.where(policy_image[i,j,:] != 0)[0]).tolist()
+                actions = (np.where(policy_image[i,j,:] != np.min(policy_image[i,j,:]))[0]).tolist()
                 actions_text = ''.join(ACTION_SYMBOLS[x] for x in actions)
                 tb.add_cell(i, j, height, width, text=actions_text,
                         loc='center', facecolor='white')

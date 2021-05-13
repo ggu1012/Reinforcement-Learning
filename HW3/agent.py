@@ -28,8 +28,6 @@ class AGENT:
             self.V_values = mcc_results["V"]
             self.Q_values = mcc_results["Q"]
             self.policy = mcc_results["PI"]
-            
-            draw_policy_image(1, np.round(self.policy, decimals=2), env=self.env)
 
         else:  # For training
             self.V_values = np.zeros((HEIGHT, WIDTH))
@@ -102,6 +100,7 @@ class AGENT:
                 for [i,j], a, next_state, reward in reversed(history):
                     cum_reward = discount * cum_reward + reward
 
+                    # First visit MC
                     if(visited[i][j] > 1):
                         visited[i][j] -= 1
 
@@ -110,6 +109,11 @@ class AGENT:
 
                         # epsilon - greedy                        
                         greedy = np.argmax(self.Q_values[i][j])
+
+                        # epsilon decay
+                        # if((episode + 1) % decay_period == 0):
+                        #     epsilon *= decay_rate
+
                         self.policy[i][j] = epsilon  / len(ACTIONS) * np.ones((len(ACTIONS)))
                         self.policy[i][j][greedy] += (1 - epsilon)       
 

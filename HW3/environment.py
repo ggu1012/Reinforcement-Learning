@@ -8,7 +8,7 @@ class grid_world:
         self.goal = GOAL
         self.obstacles = OBSTACLES
 
-    def is_terminal(self, state):   # Gaol state
+    def is_terminal(self, state):   # Goal state
         # x, y = state
         return state in self.goal
 

@@ -1,4 +1,4 @@
 *.pdf
 *.docx
-.vscode
-HW3/__pycache__/
+**/.vscode
+**/__pycache__

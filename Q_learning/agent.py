@@ -65,16 +65,22 @@ class AGENT:
 
             while not (done or timeout):
                 # Next state and action generation
-                action = self.get_action(state,epsilon)
+                action = self.get_action(state, epsilon)
                 movement = ACTIONS[action]
-                next_state, reward = self.env.interaction(state, movement)
+                next_state, reward = self.env.interaction(state, movement)                
 
                 # ***********   Q value update   ****************
-                #
-                #
-                #
-                #
-                #
+
+                # Find arg max_a Q(s',a)
+                next_i, next_j = next_state
+                max_idx = np.argmax(self.Q_values[next_i, next_j, :])
+                target = self.Q_values[next_i, next_j, max_idx]
+                
+                i, j = state
+                self.Q_values[i, j, action] += alpha * (reward + discount * target - self.Q_values[i, j, action])
+
+                state = next_state
+
                 # ************************************************
 
                 seq_len += 1

@@ -11,7 +11,7 @@ EPOCH = TRAINING_EPISODE_NUM / STEPS
 
 
 class AGENT:
-    def __init__(self, env, tdc = False, is_upload=False):
+    def __init__(self, env, is_upload=False):
 
         self.ACTIONS = ACTIONS
         self.env = env
@@ -19,7 +19,7 @@ class AGENT:
         self.state = [0, 0]
 
         if is_upload:  # Test
-            mcc_results = np.load("./result/mcc.npz") if tdc == False else np.load("./result/tdc.npz")
+            mcc_results = np.load("./result/mcc_decay.npz")
             self.V_values = mcc_results["V"]
             self.Q_values = mcc_results["Q"]
             self.policy = mcc_results["PI"]
